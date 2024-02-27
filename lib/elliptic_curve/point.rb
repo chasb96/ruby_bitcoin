@@ -38,9 +38,29 @@ class Point
         end
 
         if self == other 
-            return add_equal(self)
+            if p.y.number == 0 
+                return Point.infinity(p.curve)
+            end
+        
+            three = FieldElement.new(3, p.x.prime)
+            two = FieldElement.new(2, p.x.prime)
+        
+            slope = (three * (p.x ** 2) + a) / (two * p.y)
+        
+            x2 = (slope ** 2) - (two * p.x)
+            y2 = (slope * (p.x - x2)) - p.y
+        
+            return Point.new(x2, y2, p.curve)
         else
-            return add_not_equal(self, other)
+            x_diff = p2.x - p1.x
+            y_diff = p2.y - p1.y
+
+            slope = y_diff / x_diff
+
+            x3 = ((slope ** 2) - p1.x) - p2.x
+            y3 = (slope * (p1.x - x3)) - p1.y
+
+            return Point.new(x3, y3, p1.curve)
         end
     end
 
@@ -63,32 +83,4 @@ class Point
     def ==(other)
         return self.x == other.x && self.y == other.y && self.curve == other.curve
     end
-end
-
-def add_not_equal(p1, p2)
-    x_diff = p2.x - p1.x
-    y_diff = p2.y - p1.y
-
-    slope = y_diff / x_diff
-
-    x3 = ((slope ** 2) - p1.x) - p2.x
-    y3 = (slope * (p1.x - x3)) - p1.y
-
-    return Point.new(x3, y3, p1.curve)
-end
-
-def add_equal(p)
-    if p.y.number == 0 
-        return Point.infinity(p.curve)
-    end
-
-    three = FieldElement.new(3, p.x.prime)
-    two = FieldElement.new(2, p.x.prime)
-
-    slope = (three * (p.x ** 2) + a) / (two * p.y)
-
-    x2 = (slope ** 2) - (two * p.x)
-    y2 = (slope * (p.x - x2)) - p.y
-
-    return Point.new(x2, y2, p.curve)
 end
