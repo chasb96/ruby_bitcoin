@@ -1,4 +1,4 @@
-require "../field_element/field_element.rb"
+require "./lib/field_element/field_element"
 
 class Point
     def initialize(x, y, curve)
@@ -65,14 +65,15 @@ class Point
     end
 
     def *(scalar)
+        clone = self
         result = Point.identity(self.curve)
 
         while scalar > 0
             if scalar & 1 == 1
-                result = result + self
+                result = result + clone
             end
             
-            self = self + self
+            clone = clone + clone
 
             scalar = scalar >> 1
         end
