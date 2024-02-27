@@ -71,4 +71,5 @@ class FieldElement
 
     def ==(other)
         return self.number == other.number && self.prime == other.prime
+    end
 end
