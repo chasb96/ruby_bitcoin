@@ -1,4 +1,4 @@
-require "./lib/field_element/field_element"
+require "./lib/cryptography/field_element/field_element"
 
 class Point
     def initialize(x, y, curve)
@@ -26,6 +26,16 @@ class Point
 
     def is_identity()
         return self.x == nil && self.y == nil
+    end
+
+    def verify_signature(z, signature)
+        s_inv = signature.s * (BITCOIN_SECP256K1_CONFIG.N - 2) % BITCOIN_SECP256K1_CONFIG.N
+        u = z * s_inv % BITCOIN_SECP256K1_CONFIG.N
+        v = signature.r * s_inv % BITCOIN_SECP256K1_CONFIG.N
+
+        total = (u * g) + (v * p)
+
+        return total == signature.r
     end
 
     def +(other)
