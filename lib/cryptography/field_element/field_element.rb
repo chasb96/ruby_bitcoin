@@ -22,6 +22,10 @@ class FieldElement
         return FieldElement.new(number, self.prime)
     end
 
+    def sqrt()
+        return self ** ((BITCOIN_SECP256K1_CONFIG.P + 1) / 4)
+    end
+
     def +(other)
         if self.prime != other.prime
             raise "Mismatch in primes #{self.prime} != #{other.prime}"
